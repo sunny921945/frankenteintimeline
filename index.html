@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frankenstein Study Guide: Vol 1 & 2 + Letters</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(20, 27, 45, 0.65);
+            --card-border: rgba(139, 92, 246, 0.2);
+            --card-border-hover: rgba(139, 92, 246, 0.5);
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --accent: #8b5cf6;
+            --accent-glow: rgba(139, 92, 246, 0.3);
+            --danger: #ef4444;
+            --success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(88, 28, 135, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(30, 58, 138, 0.15) 0%, transparent 40%);
+            background-attachment: fixed;
+            padding: 2rem 1rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
+            color: #e2e8f0;
+            margin-bottom: 0.5rem;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .filter-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-muted);
+            padding: 0.6rem 1.2rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .timeline {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--accent), rgba(139, 92, 246, 0.1));
+        }
+
+        @media(min-width: 768px) {
+            .timeline::before {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+            width: 100%;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .card:hover {
+            border-color: var(--card-border-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px 0 rgba(139, 92, 246, 0.15);
+        }
+
+        @media(min-width: 768px) {
+            .card {
+                width: calc(50% - 2.5rem);
+            }
+            .card:nth-child(odd) {
+                margin-left: auto;
+            }
+            .card:nth-child(even) {
+                margin-right: auto;
+            }
+        }
+
+        /* Timeline Dot */
+        .card::after {
+            content: '';
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            background: var(--accent);
+            border-radius: 50%;
+            top: 1.8rem;
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        @media(max-width: 767px) {
+            .card::after {
+                left: -33px;
+            }
+            .timeline {
+                padding-left: 25px;
+            }
+        }
+
+        @media(min-width: 768px) {
+            .card:nth-child(odd)::after {
+                left: -3.2rem;
+            }
+            .card:nth-child(even)::after {
+                right: -3.2rem;
+            }
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+            gap: 1rem;
+        }
+
+        .chapter-tag {
+            font-family: 'Cinzel', serif;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #c084fc;
+            background: rgba(139, 92, 246, 0.1);
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .edit-btn {
+            background: transparent;
+            border: 1px solid var(--text-muted);
+            color: var(--text-muted);
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .edit-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .main-idea {
+            background: rgba(0, 0, 0, 0.2);
+            border-left: 3px solid var(--accent);
+            padding: 0.75rem 1rem;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.9rem;
+            color: #e5e7eb;
+        }
+
+        .main-idea strong {
+            color: #d8b4fe;
+            display: block;
+            margin-bottom: 0.2rem;
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* Edit Modal / Form state */
+        .card.editing input, .card.editing textarea {
+            width: 100%;
+            background: rgba(11, 15, 25, 0.8);
+            border: 1px solid var(--accent);
+            color: white;
+            padding: 0.5rem;
+            border-radius: 6px;
+            font-family: inherit;
+            margin-bottom: 0.5rem;
+        }
+
+        .card.editing textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .card-actions {
+            display: none;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .card.editing .card-actions {
+            display: flex;
+        }
+
+        .save-btn {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 0.4rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .cancel-btn {
+            background: transparent;
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 0.4rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .reset-container {
+            text-align: center;
+            margin-top: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .reset-btn {
+            background: transparent;
+            border: 1px dashed var(--text-muted);
+            color: var(--text-muted);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .reset-btn:hover {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>FRANKENSTEIN</h1>
+        <p>Interactive Study Guide • Walton's Letters, Volume 1 & Volume 2</p>
+    </header>
+
+    <div class="controls">
+        <button class="filter-btn active" onclick="filterTimeline('all', this)">All Sections</button>
+        <button class="filter-btn" onclick="filterTimeline('letters', this)">Walton's Letters</button>
+        <button class="filter-btn" onclick="filterTimeline('vol1', this)">Volume I</button>
+        <button class="filter-btn" onclick="filterTimeline('vol2', this)">Volume II</button>
+    </div>
+
+    <div class="timeline" id="timelineContainer">
+        <!-- Cards will be populated via JavaScript to allow easy state editing and persistence -->
+    </div>
+
+    <div class="reset-container">
+        <button class="reset-btn" onclick="resetToDefault()">Reset Custom Edits to Original</button>
+    </div>
+
+    <script>
+        const defaultData = [
+            {
+                id: 'letter-1',
+                section: 'letters',
+                tag: "Letter I",
+                title: "Walton’s Ambition & Northern Quest",
+                description: "Captain Robert Walton writes to his sister, Margaret Saville, from St. Petersburg, Russia. He details his preparation for a voyage to the North Pole to discover a passage and unlock secrets of magnetism, driven by an obsessive desire for glory and scientific discovery.",
+                mainIdea: "Establishes the frame narrative and introduces the core theme of dangerous ambition (hubris) mirroring Victor's later journey."
+            },
+            {
+                id: 'letter-2',
+                section: 'letters',
+                tag: "Letter II & III",
+                title: "Loneliness & Departure",
+                description: "Writing from Archangel, Walton laments his lack of a true intellectual companion. He sets sail, expressing utter confidence in his success despite the looming physical hazards of ice and cold.",
+                mainIdea: "Highlights isolation and longing for companionship, a major emotional driver shared by both Walton and the Creature."
+            },
+            {
+                id: 'letter-4',
+                section: 'letters',
+                tag: "Letter IV",
+                title: "Rescue of Victor Frankenstein",
+                description: "Trapped in sea ice, Walton's crew spots a sled driven by a gigantic figure. The next day, they rescue a freezing, dying man—Victor Frankenstein—who demands to know where the ship is headed before coming aboard.",
+                mainIdea: "Bridges the frame narrative to Victor's primary tale and foreshadows the pursuit of the Creature."
+            },
+            {
+                id: 'v1-ch1',
+                section: 'vol1',
+                tag: "Volume I, Chapter 1",
+                title: "Victor’s Idyllic Childhood",
+                description: "Victor recounts his privileged upbringing in Geneva. His parents adopt Elizabeth Lavenza, and his close friendship with Henry Clerval begins. Victor is blessed with warmth, family stability, and deep affection.",
+                mainIdea: "Contrasts Victor's peaceful, loving origins with his catastrophic later isolation."
+            },
+            {
+                id: 'v1-ch2',
+                section: 'vol1',
+                tag: "Volume I, Chapter 2",
+                title: "Cornelius Agrippa & Obsession",
+                description: "Victor becomes fascinated by outdated alchemists like Cornelius Agrippa, Paracelsus, and Albertus Magnus. After witnessing a massive lightning storm shatter an oak tree, he loses interest in alchemy and becomes captivated by modern natural philosophy and electricity.",
+                mainIdea: "Marks Victor's fateful turn toward empirical science and unbridled natural philosophy."
+            },
+            {
+                id: 'v1-ch3',
+                section: 'vol1',
+                tag: "Volume I, Chapter 3",
+                title: "Departure for Ingolstadt & Tragedy",
+                description: "At age 17, just as Victor is set to leave for the University of Ingolstadt, Elizabeth contracts scarlet fever. Caroline Frankenstein nurses her back to health, but catches the disease herself and dies on her deathbed, extracting a promise that Victor and Elizabeth marry.",
+                mainIdea: "Death enters Victor's life for the first time, planting the subconscious seed of his obsession to conquer mortality."
+            },
+            {
+                id: 'v1-ch4',
+                section: 'vol1',
+                tag: "Volume I, Chapter 4",
+                title: "Unveiling the Secret of Life",
+                description: "At Ingolstadt, Victor excels under Professor Waldman. Fascinated by the spark of animation, Victor spends two years in intense seclusion studying chemistry, anatomy, and visiting charnel houses and slaughterhouses until he discovers the secret of generating life.",
+                mainIdea: "Demonstrates the destructive nature of obsessive isolation and unchecked scientific ambition."
+            },
+            {
+                id: 'v1-ch5',
+                section: 'vol1',
+                tag: "Volume I, Chapter 5",
+                title: "The Creature Awakens",
+                description: "On a dreary November night, Victor brings his eight-foot-tall creation to life. Horrified by its watery eyes, yellow skin, and grotesque appearance, Victor flees in terror, dreams of his dead mother turning into a corpse, and falls into a prolonged feverish illness nursed by Clerval.",
+                mainIdea: "Victor’s immediate rejection and abandonment of his 'child' due to aesthetic disgust triggers all subsequent tragedy."
+            },
+            {
+                id: 'v1-ch6',
+                section: 'vol1',
+                tag: "Volume I, Chapter 6",
+                title: "Recovery & Letters from Home",
+                description: "Victor recovers with Henry's help and plans to study Oriental languages. He receives a loving letter from Elizabeth mentioning Justine Moritz, a servant girl who has joined the Frankenstein household.",
+                mainIdea: "Provides a brief, calming pastoral respite before the onset of horror."
+            },
+            {
+                id: 'v1-ch7',
+                section: 'vol1',
+                tag: "Volume I, Chapter 7",
+                title: "The Murder of William Frankenstein",
+                description: "Victor receives news that his youngest brother, William, has been murdered in Geneva. Returning home immediately, Victor glimpses the Creature near the crime scene during a thunderstorm and realizes his monster killed William.",
+                mainIdea: "The first direct consequence of Victor's creation; guilt prevents Victor from confessing."
+            },
+            {
+                id: 'v1-ch8',
+                section: 'vol1',
+                tag: "Volume I, Chapter 8",
+                title: "The Trial and Execution of Justine",
+                description: "William's locket is found in Justine's pocket. Despite her innocence and emotional appeals, she is falsely condemned by circumstantial evidence and executed. Victor suffers agonizing guilt.",
+                mainIdea: "Exposes societal injustice and shows how Victor's hidden secret destroys innocent lives around him."
+            },
+            {
+                id: 'v2-ch1',
+                section: 'vol2',
+                tag: "Volume II, Chapter 1",
+                title: "Grief and Tour of Chamounix",
+                description: "Consumed by remorse, depression, and thoughts of suicide, Victor travels to the mountains of Chamounix and the Mer de Glace glacier to find solace in the sublime beauty of nature.",
+                mainIdea: "Explores the Romantic motif of nature's healing and sublime power."
+            },
+            {
+                id: 'v2-ch2',
+                section: 'vol2',
+                tag: "Volume II, Chapter 2",
+                title: "Encounter on the Glacier",
+                description: "While crossing the glacier, Victor encounters the Creature moving at superhuman speed. Filled with rage, Victor tries to attack him, but the intelligent Creature calmly demands Victor listen to his story, promising to leave humankind forever if he complies.",
+                mainIdea: "Shifts the narrative perspective directly to the Creature, humanizing him and challenging moral boundaries."
+            },
+            {
+                id: 'v2-ch3-5',
+                section: 'vol2',
+                tag: "Volume II, Chapters 3–5",
+                title: "The Creature’s Education & The DeLaceys",
+                description: "The Creature recounts his early days of sensory overload in the forest, learning to survive, and taking shelter in a hovel attached to a cottage inhabited by the exiled DeLacey family (DeLacey, Felix, Agatha, and Safie). Secretly observing them, he learns language, reads *Paradise Lost*, and yearns for connection.",
+                mainIdea: "Highlights Rousseau's concept of the 'noble savage'—the Creature is born inherently good and empathetic, corrupted only by societal cruelty."
+            },
+            {
+                id: 'v2-ch6-7',
+                section: 'vol2',
+                tag: "Volume II, Chapters 6–7",
+                title: "Rejection and Vengeance",
+                description: "Hoping for acceptance, the Creature finally reveals himself to the blind old man DeLacey, but Felix bursts in and beats him away in terror. Heartbroken and filled with burning hatred, the Creature burns the cottage, travels toward Geneva, accidentally shoots William, frames Justine, and demands Victor create an equal female companion.",
+                mainIdea: "Demonstrates how isolation, prejudice, and rejection transform a sensitive creature into a vengeful monster."
+            }
+        ];
+
+        let studyData = JSON.parse(localStorage.getItem('frankenstein_study_data')) || defaultData;
+
+        function renderTimeline(filter = 'all') {
+            const container = document.getElementById('timelineContainer');
+            container.innerHTML = '';
+
+            const filtered = filter === 'all' ? studyData : studyData.filter(item => item.section === filter);
+
+            filtered.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.setAttribute('data-id', item.id);
+                card.innerHTML = `
+                    <div class="card-header">
+                        <span class="chapter-tag">${item.tag}</span>
+                        <button class="edit-btn" onclick="toggleEdit('${item.id}')">Edit</button>
+                    </div>
+                    <div class="card-view">
+                        <h3>${item.title}</h3>
+                        <p class="desc-text">${item.description}</p>
+                        <div class="main-idea">
+                            <strong>Main Idea / Test Takeaway</strong>
+                            <span class="idea-text">${item.mainIdea}</span>
+                        </div>
+                    </div>
+                    <div class="card-edit" style="display:none;">
+                        <input type="text" class="edit-title" value="${item.title}">
+                        <textarea class="edit-desc">${item.description}</textarea>
+                        <textarea class="edit-idea">${item.mainIdea}</textarea>
+                        <div class="card-actions">
+                            <button class="save-btn" onclick="saveEdit('${item.id}')">Save Changes</button>
+                            <button class="cancel-btn" onclick="toggleEdit('${item.id}')">Cancel</button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterTimeline(section, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderTimeline(section);
+        }
+
+        function toggleEdit(id) {
+            const card = document.querySelector(`[data-id="${id}"]`);
+            card.classList.toggle('editing');
+            const viewDiv = card.querySelector('.card-view');
+            const editDiv = card.querySelector('.card-edit');
+            const editBtn = card.querySelector('.edit-btn');
+
+            if (card.classList.contains('editing')) {
+                viewDiv.style.display = 'none';
+                editDiv.style.display = 'block';
+                editBtn.style.display = 'none';
+            } else {
+                viewDiv.style.display = 'block';
+                editDiv.style.display = 'none';
+                editBtn.style.display = 'block';
+            }
+        }
+
+        function saveEdit(id) {
+            const card = document.querySelector(`[data-id="${id}"]`);
+            const newTitle = card.querySelector('.edit-title').value;
+            const newDesc = card.querySelector('.edit-desc').value;
+            const newIdea = card.querySelector('.edit-idea').value;
+
+            const item = studyData.find(d => d.id === id);
+            if (item) {
+                item.title = newTitle;
+                item.description = newDesc;
+                item.mainIdea = newIdea;
+                localStorage.setItem('frankenstein_study_data', JSON.stringify(studyData));
+            }
+
+            renderTimeline(document.querySelector('.filter-btn.active').getAttribute('onclick').match(/'([^']+)'/)[1]);
+        }
+
+        function resetToDefault() {
+            if (confirm("Reset all edits back to original study guide text?")) {
+                localStorage.removeItem('frankenstein_study_data');
+                studyData = JSON.parse(JSON.stringify(defaultData));
+                renderTimeline('all');
+                document.querySelectorAll('.filter-btn').forEach((b, idx) => {
+                    if (idx === 0) b.classList.add('active');
+                    else b.classList.remove('active');
+                });
+            }
+        }
+
+        // Initial render
+        renderTimeline('all');
+    </script>
+</body>
+</html>
